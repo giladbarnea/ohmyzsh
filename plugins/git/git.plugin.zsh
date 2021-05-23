@@ -81,9 +81,8 @@ alias gcan!='git commit -v -a --no-edit --amend'
 alias gcans!='git commit -v -a -s --no-edit --amend'
 alias gcam='git commit -a -m'
 alias gcsm='git commit -s -m'
-alias gcb='git checkout -b'
-# alias gcas='git commit -a -s'
-# alias gcasm='git commit -a -s -m'
+alias gcas='git commit -a -s'
+alias gcasm='git commit -a -s -m'
 # alias gcb='git checkout -b'
 alias gcf='git config --list'
 alias gcl='git clone --recurse-submodules'
@@ -190,7 +189,7 @@ alias git-svn-dcommit-push='git svn dcommit && git push github $(git_main_branch
 alias gk='\gitk --all --branches'
 alias gke='\gitk --all $(git log -g --pretty=%h)'
 
-#alias gl='git pull'
+# alias gl='git pull'
 alias gpl='git pull'
 alias glg='git log --stat'
 alias glgp='git log --stat -p'
@@ -233,6 +232,7 @@ alias grbc='git rebase --continue'
 alias grbd='git rebase develop'
 alias grbi='git rebase -i'
 alias grbm='git rebase $(git_main_branch)'
+alias grbo='git rebase --onto'
 alias grbs='git rebase --skip'
 alias grev='git revert'
 alias grh='git reset'
@@ -273,10 +273,6 @@ alias gsp='git stash pop'
 alias gsst='git stash show --text'
 alias gsiu='git stash --include-untracked'
 alias gsall='git stash --all'
-<<<<<<< HEAD
-=======
-
->>>>>>> fe4f148ae07ab7611c8f0e7c1dd35a97b855f683
 
 alias gsu='git submodule update'
 alias gsw='git switch'
@@ -285,18 +281,33 @@ alias gswc='git switch -c'
 alias gts='git tag -s'
 alias gtv='git tag | sort -V'
 alias gtl='gtl(){ git tag --sort=-v:refname -n -l "${1}*" }; noglob gtl'
+
+
 function gexclude(){
 	if [[ ! -e  "$1" ]]; then
-		echo "does not exist: $1"
+		log.fatal "does not exist: $1"
 		return 1
 	fi
 	if [[ ! -d .git ]]; then
-		echo "no .git dir"
+		log.fatal "no .git dir"
 		return 1
 	fi
-	echo "\n$1" >> .git/info/exclude
+  local exclude
+  if [[ "$(cat .git/info/exclude | tail -1)" == $'\n' ]]; then
+    exclude="$1"
+  else
+    exclude="\n$1"
+  fi
+  
+	if echo -n "$exclude" >> .git/info/exclude; then
+    log.good "Added $1 to .git/info/exclude"
+    return 0
+  else
+    log.fatal "Failed adding $1 to .git/info/exclude"
+    return 1
+  fi
+    
 }
-
 alias gunignore='git update-index --no-assume-unchanged'
 alias gunwip='git log -n 1 | grep -q -c "\-\-wip\-\-" && git reset HEAD~1'
 alias gup='git pull --rebase'
