@@ -284,10 +284,6 @@ alias gtl='gtl(){ git tag --sort=-v:refname -n -l "${1}*" }; noglob gtl'
 
 
 function gexclude(){
-	if [[ ! -e  "$1" ]]; then
-		log.fatal "does not exist: $1"
-		return 1
-	fi
 	if [[ ! -d .git ]]; then
 		log.fatal "no .git dir"
 		return 1
