@@ -13,7 +13,6 @@ git_version="${${(As: :)$(git version 2>/dev/null)}[3]}"
 function current_branch() {
   git_current_branch
 }
-alias gcb=git_current_branch
 
 # Pretty log messages
 function _git_log_prettily(){
@@ -48,7 +47,7 @@ function git_main_branch() {
 # (sorted alphabetically)
 #
 
-# alias g='git'
+alias g='git'
 
 alias ga='git add'
 alias gaa='git add --all'
@@ -83,7 +82,7 @@ alias gcam='git commit -a -m'
 alias gcsm='git commit -s -m'
 alias gcas='git commit -a -s'
 alias gcasm='git commit -a -s -m'
-# alias gcb='git checkout -b'
+alias gcb='git checkout -b'
 alias gcf='git config --list'
 alias gcl='git clone --recurse-submodules'
 alias gclean='git clean -id'
@@ -101,13 +100,12 @@ alias gcs='git commit -S'
 alias gcss='git commit -S -s'
 alias gcssm='git commit -S -s -m'
 
-# alias gd='git diff'
+alias gd='git diff'
 alias gdca='git diff --cached'
 alias gdcw='git diff --cached --word-diff'
 alias gdct='git describe --tags $(git rev-list --tags --max-count=1)'
 alias gds='git diff --staged'
-# alias gdt='git diff-tree --no-commit-id --name-only -r'
-alias gdt='git difftool'
+alias gdt='git diff-tree --no-commit-id --name-only -r'
 alias gdw='git diff --word-diff'
 
 function gdnolock() {
@@ -192,8 +190,7 @@ alias git-svn-dcommit-push='git svn dcommit && git push github $(git_main_branch
 alias gk='\gitk --all --branches'
 alias gke='\gitk --all $(git log -g --pretty=%h)'
 
-# alias gl='git pull'
-alias gpl='git pull'
+alias gl='git pull'
 alias glg='git log --stat'
 alias glgp='git log --stat -p'
 alias glgg='git log --graph'
@@ -204,11 +201,9 @@ alias glol="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgre
 alias glols="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --stat"
 alias glod="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset'"
 alias glods="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset' --date=short"
-# alias glola="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all"
-alias glg="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all"
+alias glola="git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all"
 alias glog='git log --oneline --decorate --graph'
-# alias gloga='git log --oneline --decorate --graph --all'
-alias gl='git log --oneline --decorate --graph --all'
+alias gloga='git log --oneline --decorate --graph --all'
 alias glp="_git_log_prettily"
 
 alias gm='git merge'
@@ -218,8 +213,7 @@ alias gmtvim='git mergetool --no-prompt --tool=vimdiff'
 alias gmum='git merge upstream/$(git_main_branch)'
 alias gma='git merge --abort'
 
-# alias gp='git push'
-alias gpsh='git push'
+alias gp='git push'
 alias gpd='git push --dry-run'
 alias gpf='git push --force-with-lease'
 alias gpf!='git push --force'
@@ -256,7 +250,7 @@ alias grup='git remote update'
 alias grv='git remote -v'
 
 alias gsb='git status -sb'
-# alias gsd='git svn dcommit'
+alias gsd='git svn dcommit'
 alias gsh='git show'
 alias gsi='git submodule init'
 alias gsps='git show --pretty=short --show-signature'
@@ -268,16 +262,15 @@ alias gst='git status'
 is-at-least 2.13 "$git_version" \
   && alias gsta='git stash push' \
   || alias gsta='git stash save'
-alias gs='git stash'
-alias gsa='git stash apply'
-alias gsc='git stash clear'
-alias gsd='git stash drop'
-alias gsl='git stash list'
-alias gsp='git stash pop'
-alias gsst='git stash show --text'
-alias gsiu='git stash --include-untracked'
-alias gsall='git stash --all'
 
+alias gstaa='git stash apply'
+alias gstc='git stash clear'
+alias gstd='git stash drop'
+alias gstl='git stash list'
+alias gstp='git stash pop'
+alias gsts='git stash show --text'
+alias gstu='gsta --include-untracked'
+alias gstall='git stash --all'
 alias gsu='git submodule update'
 alias gsw='git switch'
 alias gswc='git switch -c'
@@ -286,28 +279,6 @@ alias gts='git tag -s'
 alias gtv='git tag | sort -V'
 alias gtl='gtl(){ git tag --sort=-v:refname -n -l "${1}*" }; noglob gtl'
 
-
-function gexclude(){
-	if [[ ! -d .git ]]; then
-		log.fatal "no .git dir"
-		return 1
-	fi
-  local exclude
-  if [[ "$(cat .git/info/exclude | tail -1)" == $'\n' ]]; then
-    exclude="$1"
-  else
-    exclude="\n$1"
-  fi
-  
-	if echo -n "$exclude" >> .git/info/exclude; then
-    log.good "Added $1 to .git/info/exclude"
-    return 0
-  else
-    log.fatal "Failed adding $1 to .git/info/exclude"
-    return 1
-  fi
-    
-}
 alias gunignore='git update-index --no-assume-unchanged'
 alias gunwip='git log -n 1 | grep -q -c "\-\-wip\-\-" && git reset HEAD~1'
 alias gup='git pull --rebase'
@@ -325,7 +296,7 @@ alias gams='git am --skip'
 alias gama='git am --abort'
 alias gamscp='git am --show-current-patch'
 
-function gbrename() {
+function grename() {
   if [[ -z "$1" || -z "$2" ]]; then
     echo "Usage: $0 old_branch new_branch"
     return 1
